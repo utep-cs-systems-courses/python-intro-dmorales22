@@ -4,17 +4,18 @@ import re
 
 def main(): 
 	print("Welcome to word counter!")
-	dict = word_counter(sys.argv[1])
-	file_writer(dict, sys.argv[2])
+	dict = word_counter(sys.argv[1]) #Takes first argument (input file)
+	file_writer(dict, sys.argv[2]) #Takes dictionary and second argument (output file) and writes contents of dictionary
 
-def word_counter(filename):
+def word_counter(filename): #Counts every instance of word from an input file by parsing.
 	dict = {}
 	with open(filename, encoding='windows-1252') as textFile:  
 		for line in textFile:
-			line = line.rstrip("\n")
-			string = line.split()
+			line = line.rstrip("\n") #Removes new lines 
+			line = line.replace("-", " ") #Removes dashed lines to seperate words 
+			string = line.split() #Tokenizes the string. 
 
-			for i in range(len(string)):
+			for i in range(len(string)): 
 				word = word_parser(string[i])
 
 				if word in dict:
@@ -26,15 +27,14 @@ def word_counter(filename):
 
 	return dict
 
-def word_parser(word_u):
-	word = str(word_u)
-	word = word.replace(",", "")
+def word_parser(word_u): #Parses each tokenized word to removed capitalized letters and unwanted characters 
+	word = str(word_u) #Makes sure word is a string 
+	word = word.replace(",", "") 
 	word = word.replace(".", "")
 	word = word.replace(";", "")
 	word = word.replace("?", "")
 	word = word.replace('"', "")
 	word = word.replace(":", "")
-	word = word.replace("-", "")
 
 	char_strs = ""
 	for i in range(len(word)):
@@ -55,14 +55,15 @@ def caps_detector(char): #Checks if a letter is capitalized, then returns the lo
 			
 	return char 
 
-def file_writer(dict, output):
-	file = open(output, "w")
+def file_writer(dict, output): #Get dictionary and writes its contents to output file
+	file = open(output, "w") #Overrides existing contents 
 
-	for i in sorted(dict.keys()):
+	for i in sorted(dict.keys()): #Writes out in printed order. 
 		line = str(i) + " " + str(dict[i])
 		file.write(line + "\n")
 		print(i, dict[i])
 
 	file.close()
 
-main()
+if __name__ == "__main__":
+	main()
